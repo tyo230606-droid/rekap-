@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rekap Player</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#020617;
+color:white;
+overflow-x:hidden;
+}
+
+body::before{
+content:"";
+position:fixed;
+width:500px;
+height:500px;
+background:#0066ff;
+filter:blur(180px);
+top:-200px;
+left:-150px;
+opacity:.35;
+z-index:-1;
+}
+
+.login-page{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:20px;
+}
+
+.login-box{
+width:100%;
+max-width:420px;
+background:rgba(5,15,35,.9);
+border:1px solid rgba(0,120,255,.25);
+backdrop-filter:blur(14px);
+border-radius:32px;
+padding:30px;
+box-shadow:
+0 0 30px rgba(0,119,255,.2),
+inset 0 0 20px rgba(255,255,255,.03);
+animation:fade .4s ease;
+}
+
+@keyframes fade{
+from{
+opacity:0;
+transform:translateY(20px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+.logo{
+font-size:38px;
+font-weight:900;
+margin-bottom:12px;
+text-align:center;
+background:linear-gradient(90deg,#4da3ff,#00ffd0);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+
+.login-desc{
+text-align:center;
+color:#8ea2c7;
+line-height:1.6;
+margin-bottom:25px;
+font-size:16px;
+}
+
+.input-login{
+width:100%;
+padding:18px;
+border:none;
+outline:none;
+border-radius:20px;
+background:#04101f;
+border:1px solid rgba(0,140,255,.25);
+color:white;
+font-size:18px;
+margin-bottom:18px;
+text-align:center;
+letter-spacing:3px;
+}
+
+.btn{
+width:100%;
+padding:16px;
+border:none;
+border-radius:20px;
+font-size:18px;
+font-weight:bold;
+cursor:pointer;
+color:white;
+transition:.2s;
+margin-top:8px;
+}
+
+.btn:hover{
+transform:scale(.98);
+}
+
+.blue{
+background:linear-gradient(90deg,#2563ff,#1eb5ff);
+box-shadow:0 0 25px rgba(0,119,255,.4);
+}
+
+.green{
+background:linear-gradient(90deg,#00a86b,#00d68f);
+box-shadow:0 0 25px rgba(0,255,150,.25);
+}
+
+.red{
+background:linear-gradient(90deg,#8b0f2e,#ff1455);
+}
+
+.error{
+margin-top:15px;
+text-align:center;
+color:#ff5f7a;
+display:none;
+}
+
+.main-app{
+display:none;
+padding:18px;
+}
+
+.container{
+max-width:700px;
+margin:auto;
+}
+
+.card{
+background:rgba(5,15,35,.88);
+border:1px solid rgba(0,120,255,.25);
+backdrop-filter:blur(12px);
+border-radius:28px;
+padding:22px;
+margin-bottom:22px;
+box-shadow:
+0 0 25px rgba(0,110,255,.18),
+inset 0 0 20px rgba(255,255,255,.03);
+}
+
+.title{
+font-size:32px;
+font-weight:bold;
+margin-bottom:10px;
+}
+
+.desc{
+color:#9fb2d9;
+line-height:1.6;
+font-size:16px;
+}
+
+.label{
+margin-top:18px;
+margin-bottom:10px;
+font-size:16px;
+}
+
+input{
+width:100%;
+padding:16px;
+border:none;
+outline:none;
+border-radius:18px;
+background:#04101f;
+border:1px solid rgba(0,140,255,.25);
+color:white;
+font-size:17px;
+margin-bottom:14px;
+}
+
+input::placeholder{
+color:#7182a7;
+}
+
+.flex{
+display:flex;
+gap:10px;
+}
+
+.warning{
+margin-top:18px;
+padding:18px;
+border-radius:18px;
+background:#04101f;
+border:1px solid rgba(0,120,255,.2);
+line-height:1.8;
+font-size:17px;
+}
+
+.player-box{
+margin-top:20px;
+padding:18px;
+border-radius:20px;
+background:#04101f;
+border:1px solid rgba(0,120,255,.2);
+transition:.2s;
+}
+
+.player-title{
+font-size:22px;
+font-weight:bold;
+margin-bottom:12px;
+color:#56a7ff;
+}
+
+.item{
+background:#07172b;
+padding:14px;
+border-radius:14px;
+margin-bottom:10px;
+display:flex;
+justify-content:space-between;
+font-size:17px;
+}
+
+.total{
+margin-top:12px;
+font-size:17px;
+color:#00ff95;
+}
+
+textarea{
+width:100%;
+height:320px;
+background:#020d1a;
+border:1px solid rgba(0,120,255,.25);
+border-radius:20px;
+padding:18px;
+font-size:17px;
+color:white;
+resize:none;
+margin-top:18px;
+}
+
+.empty{
+text-align:center;
+padding:40px;
+color:#6f82a7;
+font-size:20px;
+}
+
+.win{
+border:1px solid rgba(0,255,120,.5);
+box-shadow:
+0 0 25px rgba(0,255,120,.3);
+}
+
+.popup{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,.7);
+display:none;
+justify-content:center;
+align-items:center;
+padding:20px;
+z-index:999;
+}
+
+.popup-box{
+width:100%;
+max-width:360px;
+background:#06111f;
+border:1px solid rgba(0,120,255,.25);
+border-radius:28px;
+padding:25px;
+text-align:center;
+box-shadow:
+0 0 30px rgba(0,120,255,.25);
+animation:fade .2s ease;
+}
+
+.popup-title{
+font-size:24px;
+font-weight:bold;
+margin-bottom:10px;
+}
+
+.popup-desc{
+color:#9fb2d9;
+line-height:1.7;
+margin-bottom:20px;
+}
+
+.popup-flex{
+display:flex;
+gap:10px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="login-page" id="loginPage">
+
+<div class="login-box">
+
+<div class="logo">
+REKAP ROOM
+</div>
+
+<div class="login-desc">
+Masukkan kode untuk membuka room
+</div>
+
+<input
+type="password"
+class="input-login"
+id="kodeInput"
+placeholder="••••">
+
+<button class="btn blue" onclick="login()">
+Masuk
+</button>
+
+<div class="error" id="error">
+Kode salah
+</div>
+
+</div>
+
+</div>
+
+<div class="main-app" id="mainApp">
+
+<div class="container">
+
+<div class="card">
+
+<div class="title">
+Rekap Player
+</div>
+
+<div class="desc">
+Tambah data otomatis masuk hasil copy biasa.<br>
+Player x2 otomatis hitung fee.<br>
+Reff All hanya potong fee tanpa x2.
+</div>
+
+<div class="label">Nama Player</div>
+<input type="text" id="player" placeholder="contoh: UDIN">
+
+<div class="label">Nama List</div>
+<input type="text" id="nickname" placeholder="contoh: ASEP">
+
+<div class="label">Nominal</div>
+<input type="number" id="nominal" placeholder="contoh: 20">
+
+<button class="btn blue" onclick="addData()">
+Tambah Data
+</button>
+
+<div class="flex">
+
+<button class="btn green" onclick="x2Player(1)">
+Player 1 x2
+</button>
+
+<button class="btn green" onclick="x2Player(2)">
+Player 2 x2
+</button>
+
+</div>
+
+<div class="flex">
+
+<button class="btn blue" onclick="reffAll()">
+Reff All
+</button>
+
+<button class="btn red" onclick="showPopup()">
+Hapus Semua
+</button>
+
+</div>
+
+<button class="btn blue" onclick="copyResult()">
+Copy Hasil
+</button>
+
+<div class="warning" id="warningBox">
+⚠️ Menunggu data player...
+</div>
+
+</div>
+
+<div class="card">
+
+<div id="playerList"></div>
+
+</div>
+
+<div class="card">
+
+<div class="title">
+Hasil Copy
+</div>
+
+<textarea id="hasil" readonly></textarea>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="popup" id="popup">
+
+<div class="popup-box">
+
+<div class="popup-title">
+Hapus Semua?
+</div>
+
+<div class="popup-desc">
+Semua data player akan dihapus permanen.
+</div>
+
+<div class="popup-flex">
+
+<button class="btn blue" onclick="closePopup()">
+Tidak
+</button>
+
+<button class="btn red" onclick="resetAll()">
+Ya
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+const akses1 = "4827";
+const akses2 = "9154";
+const akses3 = "6738";
+
+let kode = "";
+let storageKey = "";
+let data = [];
+let x2mode = 0;
+
+function login(){
+
+let input =
+document.getElementById("kodeInput").value;
+
+if(
+input !== akses1 &&
+input !== akses2 &&
+input !== akses3
+){
+
+document.getElementById("error").style.display =
+"block";
+
+return;
+
+}
+
+kode = input;
+
+if(kode === akses1){
+storageKey = "rekapData1";
+}
+
+if(kode === akses2){
+storageKey = "rekapData2";
+}
+
+if(kode === akses3){
+storageKey = "rekapData3";
+}
+
+data =
+JSON.parse(localStorage.getItem(storageKey)) || [];
+
+document.getElementById("loginPage").style.display =
+"none";
+
+document.getElementById("mainApp").style.display =
+"block";
+
+render();
+buatRekapBiasa();
+
+}
+
+function fee(nominal){
+
+return Math.ceil(nominal / 9);
+
+}
+
+function saveData(){
+
+localStorage.setItem(
+storageKey,
+JSON.stringify(data)
+);
+
+}
+
+function addData(){
+
+let player =
+document.getElementById("player").value.trim();
+
+let nickname =
+document.getElementById("nickname").value.trim();
+
+let nominal =
+parseInt(document.getElementById("nominal").value);
+
+if(!player || !nickname || !nominal){
+
+alert("Lengkapi data");
+return;
+
+}
+
+data.push({
+player,
+nickname,
+nominal
+});
+
+saveData();
+
+document.getElementById("nickname").value = "";
+document.getElementById("nominal").value = "";
+
+render();
+
+buatRekapBiasa();
+
+}
+
+function buatRekapBiasa(){
+
+x2mode = 0;
+
+let hasil = "";
+
+let groups = {};
+
+data.forEach(item=>{
+
+if(!groups[item.player]){
+groups[item.player] = [];
+}
+
+groups[item.player].push(item);
+
+});
+
+for(let player in groups){
+
+hasil += `${player}\n`;
+
+groups[player]
+.sort((a,b)=>b.nominal-a.nominal)
+.forEach(item=>{
+
+hasil +=
+`${item.nickname} ${item.nominal}\n`;
+
+});
+
+hasil += `\n`;
+
+}
+
+document.getElementById("hasil").value =
+hasil;
+
+render();
+
+}
+
+function render(){
+
+let list =
+document.getElementById("playerList");
+
+list.innerHTML = "";
+
+if(data.length == 0){
+
+list.innerHTML =
+`<div class="empty">Belum ada data.</div>`;
+
+document.getElementById("warningBox").innerHTML =
+`⚠️ Menunggu data player...`;
+
+return;
+
+}
+
+let groups = {};
+
+data.forEach(item=>{
+
+if(!groups[item.player]){
+groups[item.player] = [];
+}
+
+groups[item.player].push(item);
+
+});
+
+let players = Object.keys(groups);
+
+let totalA = 0;
+let totalB = 0;
+
+if(players[0]){
+
+groups[players[0]].forEach(x=>{
+totalA += x.nominal;
+});
+
+}
+
+if(players[1]){
+
+groups[players[1]].forEach(x=>{
+totalB += x.nominal;
+});
+
+}
+
+let selisih =
+Math.abs(totalA - totalB);
+
+if(totalA == totalB){
+
+document.getElementById("warningBox").innerHTML =
+`
+✅ Nominal sudah seimbang<br><br>
+
+${players[0]} : ${totalA}<br>
+${players[1]} : ${totalB}
+`;
+
+}else if(totalA > totalB){
+
+document.getElementById("warningBox").innerHTML =
+`
+⚠️ ${players[1] || 'Player 2'}
+kurang <b>${selisih}</b><br><br>
+
+${players[0]} : ${totalA}<br>
+${players[1]} : ${totalB}
+`;
+
+}else{
+
+document.getElementById("warningBox").innerHTML =
+`
+⚠️ ${players[0] || 'Player 1'}
+kurang <b>${selisih}</b><br><br>
+
+${players[0]} : ${totalA}<br>
+${players[1]} : ${totalB}
+`;
+
+}
+
+for(let player in groups){
+
+let total = 0;
+
+let activeWin = "";
+
+if(x2mode == 3){
+
+activeWin = "win";
+
+}else if(
+x2mode &&
+player == getPlayerName(x2mode)
+){
+
+activeWin = "win";
+
+}
+
+let html = `
+<div class="player-box ${activeWin}">
+
+<div class="player-title">
+${player}
+</div>
+`;
+
+groups[player]
+.sort((a,b)=>b.nominal-a.nominal)
+.forEach(item=>{
+
+total += item.nominal;
+
+html += `
+<div class="item">
+
+<span>${item.nickname}</span>
+
+<span>${item.nominal}</span>
+
+</div>
+`;
+
+});
+
+html += `
+<div class="total">
+Total : ${total}
+</div>
+</div>
+`;
+
+list.innerHTML += html;
+
+}
+
+}
+
+function getPlayerName(mode){
+
+let players =
+[...new Set(data.map(x=>x.player))];
+
+return players[mode - 1] || "";
+
+}
+
+function x2Player(mode){
+
+x2mode = mode;
+
+let player =
+getPlayerName(mode);
+
+if(!player){
+
+alert("Player belum ada");
+return;
+
+}
+
+let hasil =
+`${player} WIN\n\n`;
+
+data
+.filter(x=>x.player == player)
+.sort((a,b)=>b.nominal-a.nominal)
+.forEach(item=>{
+
+let hasilAkhir =
+(item.nominal * 2) - fee(item.nominal);
+
+hasil +=
+`${item.nickname} ${item.nominal}/${hasilAkhir}\n`;
+
+});
+
+document.getElementById("hasil").value =
+hasil;
+
+render();
+
+}
+
+function reffAll(){
+
+x2mode = 3;
+
+let hasil = `REFF ALL\n\n`;
+
+let groups = {};
+
+data.forEach(item=>{
+
+if(!groups[item.player]){
+groups[item.player] = [];
+}
+
+groups[item.player].push(item);
+
+});
+
+for(let player in groups){
+
+hasil += `${player}\n`;
+
+groups[player]
+.sort((a,b)=>b.nominal-a.nominal)
+.forEach(item=>{
+
+let hasilFee =
+item.nominal - fee(item.nominal);
+
+hasil +=
+`${item.nickname} ${item.nominal}/${hasilFee}\n`;
+
+});
+
+hasil += `\n`;
+
+}
+
+document.getElementById("hasil").value =
+hasil;
+
+render();
+
+}
+
+function copyResult(){
+
+let text =
+document.getElementById("hasil");
+
+text.select();
+
+document.execCommand("copy");
+
+alert("Berhasil dicopy");
+
+}
+
+function showPopup(){
+
+document.getElementById("popup").style.display =
+"flex";
+
+}
+
+function closePopup(){
+
+document.getElementById("popup").style.display =
+"none";
+
+}
+
+function resetAll(){
+
+data = [];
+
+localStorage.removeItem(storageKey);
+
+document.getElementById("hasil").value = "";
+
+x2mode = 0;
+
+render();
+
+closePopup();
+
+}
+
+</script>
+
+</body>
+</html>
